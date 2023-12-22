@@ -15,10 +15,10 @@ class MailApi:
     """
     em = EmailMessage()
     em['From'] = email_sender
-    em['To'] = email_receiver
+    em['To'] = ", " + email_receiver
+    em['subject'] = subject
 
     def set_bodyifo(self, info, count):
-        self.em['subject'] = self.subject + " " + str(count)
         final_body = self.body
         for depto in info:
             final_body +="""
@@ -33,7 +33,7 @@ class MailApi:
         context = ssl.create_default_context()
         with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
             smtp.login(self.email_sender, self.email_password)
-            smtp.sendmail(self.email_sender, self.email_receiver, self.em.as_string())
+            smtp.sendmail(self.email_sender, list(self.email_receiver.split(", ")), self.em.as_string())
 
 
 
